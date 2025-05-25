@@ -1,11 +1,10 @@
 import MovieDetails from "@/components/MovieDetails";
 
-interface MoviePageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function MoviePage({ params }: MoviePageProps) {
-  return <MovieDetails movieId={parseInt(params.id)} />;
+export default async function MoviePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return <MovieDetails movieId={parseInt(id)} />;
 }

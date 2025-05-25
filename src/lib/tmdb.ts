@@ -10,24 +10,27 @@ export const tmdbApi = axios.create({
     },
 });
 
-export const imageBaseUrl = 'https://image.tmdb.org/t/p';
+const imageBaseUrl = 'https://image.tmdb.org/t/p';
 
-export const imageSizes = {
+type ImageSize = 'small' | 'medium' | 'large' | 'original';
+type ImageType = 'poster' | 'backdrop';
+
+const imageSizes: Record<ImageType, Record<ImageSize, string>> = {
     poster: {
         small: 'w185',
         medium: 'w342',
         large: 'w500',
-        original: 'original',
+        original: 'original'
     },
     backdrop: {
         small: 'w300',
         medium: 'w780',
         large: 'w1280',
-        original: 'original',
-    },
+        original: 'original'
+    }
 };
 
-export const getImageUrl = (path: string, size: string, type: 'poster' | 'backdrop' = 'poster') => {
+export const getImageUrl = (path: string, size: ImageSize, type: ImageType = 'poster') => {
     if (!path) return '';
     return `${imageBaseUrl}/${imageSizes[type][size]}${path}`;
 }; 

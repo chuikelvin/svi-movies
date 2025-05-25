@@ -65,7 +65,7 @@ export const useMovieStore = create<MovieState>((set) => ({
                 totalPages: response.data.total_pages,
                 loading: false,
             });
-        } catch (error) {
+        } catch (_error) {
             set({ error: 'Failed to fetch movies', loading: false });
         }
     },
@@ -81,7 +81,7 @@ export const useMovieStore = create<MovieState>((set) => ({
                 totalPages: response.data.total_pages,
                 loading: false,
             });
-        } catch (error) {
+        } catch (_error) {
             set({ error: 'Failed to search movies', loading: false });
         }
     },
@@ -102,7 +102,7 @@ export const useMovieStore = create<MovieState>((set) => ({
             };
 
             set({ selectedMovie: movieDetails, loading: false });
-        } catch (error) {
+        } catch (_error) {
             set({ error: 'Failed to fetch movie details', loading: false });
         }
     },
