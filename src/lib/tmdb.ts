@@ -31,6 +31,6 @@ const imageSizes: Record<ImageType, Record<ImageSize, string>> = {
 };
 
 export const getImageUrl = (path: string, size: ImageSize, type: ImageType = 'poster') => {
-    if (!path) return '';
+    if (!path) return '/landscape-placeholder.svg';
     return `${imageBaseUrl}/${imageSizes[type][size]}${path}`;
 }; 
