@@ -65,6 +65,9 @@ export default function AuthModal({
     }
 
     await loginWithEmail(email, password);
+    if (!error) {
+      onClose();
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -96,7 +99,22 @@ export default function AuthModal({
     }
 
     await registerWithEmail(email, password);
-    if (!error) setRegisterSuccess(true);
+    if (!error) {
+      setRegisterSuccess(true);
+      // Clear form
+      setEmail("");
+      setPassword("");
+      setConfirm("");
+      // Switch to login tab after successful registration
+      setTab("login");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    await loginWithGoogle();
+    if (!error) {
+      onClose();
+    }
   };
 
   const handleClose = () => {
@@ -139,6 +157,22 @@ export default function AuthModal({
             <div className="font-extrabold text-xl text-[var(--color-accent)] tracking-wide mb-8 w-full text-center">
               SVI Movies
             </div>
+            {/* Dummy Credentials Info */}
+            <div className="mb-6 p-4 bg-[var(--color-background-secondary)] rounded-lg text-sm">
+              <p className="text-[var(--color-text-secondary)] mb-2">
+                Demo Credentials:
+              </p>
+              <div className="space-y-1">
+                <p className="text-[var(--color-text-tertiary)]">
+                  <span className="text-[var(--color-accent)]">Email:</span>{" "}
+                  admin@svi.com
+                </p>
+                <p className="text-[var(--color-text-tertiary)]">
+                  <span className="text-[var(--color-accent)]">Password:</span>{" "}
+                  svi2025rocks!
+                </p>
+              </div>
+            </div>
             {/* Close Button */}
             <button
               onClick={handleClose}
@@ -156,6 +190,7 @@ export default function AuthModal({
                     : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)]"
                 }`}
                 onClick={() => handleTabChange("login")}
+                aria-label="Switch to login form"
               >
                 Login
               </button>
@@ -166,6 +201,7 @@ export default function AuthModal({
                     : "bg-[var(--color-background-secondary)] text-[var(--color-text-primary)]"
                 }`}
                 onClick={() => handleTabChange("register")}
+                aria-label="Switch to register form"
               >
                 Register
               </button>
@@ -174,6 +210,7 @@ export default function AuthModal({
             <form
               onSubmit={tab === "login" ? handleLogin : handleRegister}
               className="flex flex-col gap-4"
+              role="form"
             >
               <Input
                 type="email"
@@ -215,6 +252,9 @@ export default function AuthModal({
                 type="submit"
                 className="w-full py-3 rounded-lg bg-[var(--color-accent)] text-[var(--color-background)] font-bold hover:bg-[var(--color-accent-hover)] transition disabled:opacity-60"
                 disabled={loading}
+                aria-label={
+                  tab === "login" ? "Submit login" : "Submit registration"
+                }
               >
                 {tab === "login"
                   ? loading
@@ -233,7 +273,7 @@ export default function AuthModal({
               <div className="flex-1 h-px bg-[var(--color-background-secondary)]" />
             </div>
             <button
-              onClick={loginWithGoogle}
+              onClick={handleGoogleLogin}
               className="w-full py-3 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] font-bold flex items-center justify-center gap-2 hover:bg-[var(--color-background-secondary)] transition disabled:opacity-60"
               disabled={loading}
             >
