@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Toaster } from "react-hot-toast";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "SVI Movies",
@@ -29,7 +30,10 @@ export default function RootLayout({
             },
           }}
         />
-        {children}
+        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] flex flex-col items-center justify-start py-4 px-0 w-full">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );
