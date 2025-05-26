@@ -8,7 +8,11 @@ import { useMovieStore } from "@/store/movieStore";
 import { getImageUrl } from "@/lib/tmdb";
 import Image from "next/image";
 
-export default function MovieSearch() {
+interface MovieSearchProps {
+  onSearch?: () => void;
+}
+
+export default function MovieSearch({ onSearch }: MovieSearchProps) {
   const [query, setQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
@@ -50,12 +54,14 @@ export default function MovieSearch() {
     if (trimmedQuery) {
       router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
       setIsDropdownOpen(false);
+      onSearch?.();
     }
   };
 
   const handleMovieClick = (movieId: number) => {
     router.push(`/movie/${movieId}`);
     setIsDropdownOpen(false);
+    onSearch?.();
   };
 
   return (
@@ -78,7 +84,7 @@ export default function MovieSearch() {
             className="bg-transparent border-none outline-none flex-1 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)]"
           />
           <button
-            className=" rounded-full bg-[var(--color-accent)] flex items-center justify-center hover:opacity-90 transition-colors p-2"
+            className="rounded-full bg-[var(--color-accent)] flex items-center justify-center hover:opacity-90 transition-colors p-2"
             aria-label="Search"
             type="submit"
           >
