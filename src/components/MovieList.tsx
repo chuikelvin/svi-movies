@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function MovieList() {
-  const router = useRouter();
   const { movies, loading, error, currentPage, totalPages, fetchMovies } =
     useMovieStore();
+  const router = useRouter();
 
   useEffect(() => {
     fetchMovies(currentPage);
@@ -23,6 +23,7 @@ export default function MovieList() {
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           className="h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white rounded-full"
+          data-testid="loading-spinner"
         />
       </div>
     );
@@ -37,6 +38,14 @@ export default function MovieList() {
       >
         {error}
       </motion.div>
+    );
+  }
+
+  if (movies.length === 0) {
+    return (
+      <div className="text-center text-[var(--color-text-secondary)] p-8">
+        No movies found.
+      </div>
     );
   }
 
@@ -56,7 +65,7 @@ export default function MovieList() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-4">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,7 +78,7 @@ export default function MovieList() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="p-2 sm:p-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+        className="p-2 sm:p-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
       >
         <AnimatePresence mode="wait">
           {movies.map((movie) => (
