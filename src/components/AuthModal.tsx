@@ -152,7 +152,7 @@ export default function AuthModal({
             animate={{ y: 0, scale: 1, opacity: 1 }}
             exit={{ y: 80, scale: 0.95, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="bg-[var(--color-modal-background)] rounded-2xl shadow-2xl p-8 w-full max-w-md relative"
+            className="bg-[var(--color-modal-background)] rounded-2xl shadow-2xl p-8 w-full max-w-sm sm:max-w-md relative"
           >
             <div className="font-extrabold text-xl text-[var(--color-accent)] tracking-wide mb-8 w-full text-center">
               SVI Movies
