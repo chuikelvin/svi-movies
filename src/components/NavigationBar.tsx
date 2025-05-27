@@ -14,8 +14,8 @@ export default function NavigationBar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Movies", href: "/movies" },
-    { name: "Series", href: "/series" },
+    { name: "Movies", href: "/movie" },
+    { name: "Series", href: "/tv" },
     { name: "Kids", href: "/kids" },
   ];
 

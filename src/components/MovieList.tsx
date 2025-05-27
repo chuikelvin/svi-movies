@@ -8,15 +8,14 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function MovieList() {
-  const { movies, loading, error, currentPage, totalPages, fetchMovies } =
-    useMovieStore();
+  const { movies, fetchMovies } = useMovieStore();
   const router = useRouter();
 
   useEffect(() => {
-    fetchMovies(currentPage);
-  }, [currentPage, fetchMovies]);
+    fetchMovies(movies.currentPage);
+  }, [movies.currentPage, fetchMovies]);
 
-  if (loading) {
+  if (movies.loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <motion.div
@@ -29,19 +28,19 @@ export default function MovieList() {
     );
   }
 
-  if (error) {
+  if (movies.error) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center text-red-500 p-4"
       >
-        {error}
+        {movies.error}
       </motion.div>
     );
   }
 
-  if (movies.length === 0) {
+  if (movies.items.length === 0) {
     return (
       <div className="text-center text-[var(--color-text-secondary)] p-8">
         No movies found.
@@ -81,7 +80,7 @@ export default function MovieList() {
         className="p-2 sm:p-0 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
       >
         <AnimatePresence mode="wait">
-          {movies.map((movie) => (
+          {movies.items.map((movie) => (
             <motion.div
               key={movie.id}
               variants={item}
@@ -129,20 +128,20 @@ export default function MovieList() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => fetchMovies(currentPage - 1)}
-          disabled={currentPage === 1}
+          onClick={() => fetchMovies(movies.currentPage - 1)}
+          disabled={movies.currentPage === 1}
           className="px-4 py-2 rounded-md bg-[var(--color-primary)] text-white disabled:bg-[var(--color-background-tertiary)] disabled:cursor-not-allowed hover:bg-[var(--color-primary-hover)]"
         >
           Previous
         </motion.button>
         <span className="text-[var(--color-text-secondary)]">
-          Page {currentPage} of {totalPages}
+          Page {movies.currentPage} of {movies.totalPages}
         </span>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => fetchMovies(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          onClick={() => fetchMovies(movies.currentPage + 1)}
+          disabled={movies.currentPage === movies.totalPages}
           className="px-4 py-2 rounded-md bg-[var(--color-primary)] text-white disabled:bg-[var(--color-background-tertiary)] disabled:cursor-not-allowed hover:bg-[var(--color-primary-hover)]"
         >
           Next

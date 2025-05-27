@@ -13,31 +13,26 @@ interface MovieDetailsProps {
 
 export default function MovieDetails({ movieId }: MovieDetailsProps) {
   const router = useRouter();
-  const {
-    selectedMovie,
-    loading,
-    error,
-    fetchMovieDetails,
-    clearSelectedMovie,
-  } = useMovieStore();
+  const { selectedMovie, movies, fetchMovieDetails, clearSelectedMovie } =
+    useMovieStore();
 
   useEffect(() => {
     fetchMovieDetails(movieId);
     return () => clearSelectedMovie();
   }, [movieId, fetchMovieDetails, clearSelectedMovie]);
 
-  if (loading) {
+  if (movies.loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="h-12 w-12 border-t-2 border-b-2 border-[var(--color-text-primary)] rounded-full animate-spin" />
+        <div className="h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white rounded-full animate-spin" />
       </div>
     );
   }
 
-  if (error || !selectedMovie) {
+  if (movies.error || !selectedMovie) {
     return (
-      <div className="text-center text-[var(--color-error)] p-4">
-        {error || "Movie not found"}
+      <div className="text-center text-red-500 p-4">
+        {movies.error || "Movie not found"}
       </div>
     );
   }

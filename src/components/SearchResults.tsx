@@ -15,7 +15,7 @@ export default function SearchResults() {
   const {
     searchResults,
     searchLoading,
-    error,
+    searchError,
     currentPage,
     totalPages,
     searchMovies,
@@ -40,14 +40,14 @@ export default function SearchResults() {
     );
   }
 
-  if (error) {
+  if (searchError) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center text-red-500 p-4"
       >
-        {error}
+        {searchError}
       </motion.div>
     );
   }
