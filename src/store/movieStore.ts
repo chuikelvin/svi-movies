@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from 'zustand';
-import { tmdbApi } from '@/lib/tmdb';
+import { tmdbApi, fetchPopularMovies, fetchPopularSeries as fetchPopularSeries, fetchKidsContent } from '@/lib/tmdb';
 
 export interface Movie {
     id: number;
@@ -35,16 +35,25 @@ export interface MovieDetails extends Movie {
     similar: Movie[];
 }
 
-export interface MovieState {
-    movies: Movie[];
-    searchResults: Movie[];
-    selectedMovie: MovieDetails | null;
+interface ContentState {
+    items: Movie[];
     loading: boolean;
-    searchLoading: boolean;
     error: string | null;
     currentPage: number;
     totalPages: number;
-    fetchMovies: (page?: number) => Promise<void>;
+}
+
+export interface MovieState {
+    movies: ContentState;
+    series: ContentState;
+    kidsContent: ContentState;
+    searchResults: Movie[];
+    selectedMovie: MovieDetails | null;
+    searchLoading: boolean;
+    searchError: string | null;
+    currentPage: number;
+    totalPages: number;
+    fetchMovies: (page: number, type?: "movie" | "tv" | "kids") => Promise<void>;
     searchMovies: (query: string, page?: number) => Promise<void>;
     liveSearch: (query: string) => Promise<void>;
     fetchMovieDetails: (id: number) => Promise<void>;
@@ -52,64 +61,108 @@ export interface MovieState {
     clearSearchResults: () => void;
 }
 
-export const useMovieStore = create<MovieState>((set) => ({
-    movies: [],
-    searchResults: [],
-    selectedMovie: null,
+const initialContentState: ContentState = {
+    items: [],
     loading: false,
-    searchLoading: false,
     error: null,
     currentPage: 1,
     totalPages: 1,
-    fetchMovies: async (page = 1) => {
+};
+
+export const useMovieStore = create<MovieState>((set) => ({
+    movies: { ...initialContentState },
+    series: { ...initialContentState },
+    kidsContent: { ...initialContentState },
+    searchResults: [],
+    selectedMovie: null,
+    searchLoading: false,
+    searchError: null,
+    currentPage: 1,
+    totalPages: 1,
+
+    fetchMovies: async (page: number, type: "movie" | "tv" | "kids" = "movie") => {
+        const stateKey = type === "movie" ? "movies" : type === "tv" ? "series" : "kidsContent";
+
+        set((state) => ({
+            [stateKey]: { ...state[stateKey], loading: true, error: null }
+        }));
+
         try {
-            set({ loading: true, error: null });
-            const response = await tmdbApi.get('/movie/popular', {
-                params: { page },
-            });
-            set({
-                movies: response.data.results,
-                currentPage: response.data.page,
-                totalPages: response.data.total_pages,
-                loading: false,
-            });
-        } catch (_error) {
-            set({ error: 'Failed to fetch movies', loading: false });
+            let response;
+            switch (type) {
+                case "tv":
+                    response = await fetchPopularSeries(page);
+                    break;
+                case "kids":
+                    response = await fetchKidsContent(page);
+                    break;
+                default:
+                    response = await fetchPopularMovies(page);
+            }
+
+            set((state) => ({
+                [stateKey]: {
+                    items: response.results,
+                    currentPage: page,
+                    totalPages: response.total_pages,
+                    loading: false,
+                    error: null
+                }
+            }));
+        } catch (error) {
+            set((state) => ({
+                [stateKey]: {
+                    ...state[stateKey],
+                    error: "Failed to fetch content. Please try again later.",
+                    loading: false
+                }
+            }));
         }
     },
+
     searchMovies: async (query: string, page = 1) => {
         try {
-            set({ searchLoading: true, error: null });
+            set({ searchLoading: true, searchError: null });
             const response = await tmdbApi.get('/search/movie', {
                 params: { query, page },
             });
             set({
                 searchResults: response.data.results,
-                currentPage: response.data.page,
-                totalPages: response.data.total_pages,
                 searchLoading: false,
+                searchError: null
             });
         } catch (_error) {
-            set({ error: 'Failed to search movies', searchLoading: false });
+            set({
+                searchError: 'Failed to search movies',
+                searchLoading: false
+            });
         }
     },
+
     liveSearch: async (query: string) => {
         try {
-            set({ searchLoading: true, error: null });
+            set({ searchLoading: true, searchError: null });
             const response = await tmdbApi.get('/search/movie', {
                 params: { query, page: 1 },
             });
             set({
                 searchResults: response.data.results.slice(0, 5),
                 searchLoading: false,
+                searchError: null
             });
         } catch (_error) {
-            set({ error: 'Failed to search movies', searchLoading: false });
+            set({
+                searchError: 'Failed to search movies',
+                searchLoading: false
+            });
         }
     },
+
     fetchMovieDetails: async (id: number) => {
         try {
-            set({ loading: true, error: null });
+            set((state) => ({
+                movies: { ...state.movies, loading: true }
+            }));
             const [movieResponse, creditsResponse, similarResponse] = await Promise.all([
                 tmdbApi.get(`/movie/${id}`),
                 tmdbApi.get(`/movie/${id}/credits`),
@@ -123,11 +176,17 @@ export const useMovieStore = create<MovieState>((set) => ({
                 similar: similarResponse.data.results,
             };
 
-            set({ selectedMovie: movieDetails, loading: false });
+            set({
+                selectedMovie: movieDetails,
+                movies: { ...useMovieStore.getState().movies, loading: false }
+            });
         } catch (_error) {
-            set({ error: 'Failed to fetch movie details', loading: false });
+            set((state) => ({
+                movies: { ...state.movies, error: 'Failed to fetch movie details', loading: false }
+            }));
         }
     },
+
     clearSelectedMovie: () => set({ selectedMovie: null }),
-    clearSearchResults: () => set({ searchResults: [], currentPage: 1, totalPages: 1 }),
+    clearSearchResults: () => set({ searchResults: [] }),
 })); 

@@ -33,4 +33,43 @@ const imageSizes: Record<ImageType, Record<ImageSize, string>> = {
 export const getImageUrl = (path: string, size: ImageSize, type: ImageType = 'poster') => {
     if (!path) return '/landscape-placeholder.svg';
     return `${imageBaseUrl}/${imageSizes[type][size]}${path}`;
+};
+
+export const fetchPopularMovies = async (page: number = 1) => {
+    const response = await tmdbApi.get('/movie/popular', {
+        params: { page }
+    });
+    return response.data;
+};
+
+export const fetchPopularSeries = async (page: number = 1) => {
+    const response = await tmdbApi.get('/discover/tv', {
+        params: {
+            page,
+            sort_by: 'popularity.desc',
+            'vote_average.gte': 7,
+            'vote_count.gte': 800,
+            with_genres: '18,16,10759,10765', // Drama, Animation, Action & Adventure, Sci-Fi & Fantasy
+            without_genres: '10767', 
+            language: 'en-US',
+            'first_air_date.gte': '2010-01-01' 
+        }
+    });
+    return response.data;
+};
+
+export const fetchKidsContent = async (page: number = 1) => {
+    const response = await tmdbApi.get('/discover/movie', {
+        params: {
+            page,
+            certification_country: 'US',
+            certification: 'G',
+            sort_by: 'release_date.desc',
+            'vote_average.gte': 6,
+            'vote_count.gte': 100,
+            with_genres: '16,10751', // Animation and Family genres
+            language: 'en-US'
+        }
+    });
+    return response.data;
 }; 
