@@ -104,7 +104,12 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
           >
             {searchLoading ? (
               <div className="p-4 text-center">
-                <div className="animate-spin h-6 w-6 border-2 border-[var(--color-accent)] border-t-transparent rounded-full mx-auto"></div>
+                <div
+                  className="animate-spin h-6 w-6 border-2 border-[var(--color-accent)] border-t-transparent rounded-full mx-auto"
+                  role="status"
+                  aria-label="Loading search results"
+                  aria-busy="true"
+                ></div>
               </div>
             ) : searchResults.length > 0 ? (
               <>
