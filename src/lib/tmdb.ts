@@ -50,9 +50,9 @@ export const fetchPopularSeries = async (page: number = 1) => {
             'vote_average.gte': 7,
             'vote_count.gte': 800,
             with_genres: '18,16,10759,10765', // Drama, Animation, Action & Adventure, Sci-Fi & Fantasy
-            without_genres: '10767', 
+            without_genres: '10767',
             language: 'en-US',
-            'first_air_date.gte': '2010-01-01' 
+            'first_air_date.gte': '2010-01-01'
         }
     });
     return response.data;
