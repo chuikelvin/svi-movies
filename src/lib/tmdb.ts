@@ -1,14 +1,18 @@
 import axios from 'axios';
 
-const TMDB_BEARER_TOKEN = process.env.NEXT_PUBLIC_TMDB_BEARER_TOKEN;
+const TMDB_BEARER_TOKEN = process.env.NEXT_PUBLIC_TMDB_BEARER_TOKEN || "";
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
-export const tmdbApi = axios.create({
-    baseURL: TMDB_BASE_URL,
-    headers: {
-        'Authorization': `Bearer ${TMDB_BEARER_TOKEN}`,
-    },
-});
+export const createTmdbApi = (token: string) => {
+    return axios.create({
+        baseURL: TMDB_BASE_URL,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+};
+
+export const tmdbApi = createTmdbApi(TMDB_BEARER_TOKEN);
 
 const imageBaseUrl = 'https://image.tmdb.org/t/p';
 
