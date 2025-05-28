@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -148,7 +149,7 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
         className="w-full max-w-2xl mx-auto"
         data-testid="search-form"
       >
-        <div className="flex-1 flex justify-center gap-2 bg-[var(--color-background-secondary)] rounded-full pl-4 pr-2 py-2 h-12">
+        <div className="flex-1 flex-wrap flex justify-center gap-2 bg-[var(--color-background-secondary)] rounded-full pl-4 pr-2 py-2 h-12">
           <motion.input
             ref={inputRef}
             whileFocus={{ scale: 1.02 }}
@@ -231,7 +232,7 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
                         <motion.div
                           key={movie.id}
                           whileHover={{
-                            backgroundColor: "var(--color-background-tertiary)",
+                            backgroundColor: "var(--color-accent)",
                           }}
                           className={`flex items-center gap-4 p-3 cursor-pointer hover:bg-[var(--color-background-tertiary)] ${
                             index === selectedIndex
@@ -240,13 +241,13 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
                           }`}
                           onClick={() => handleMovieClick(movie.id)}
                         >
-                          <div className="relative w-12 h-18 flex-shrink-0">
-                            {/* <Image
+                          <div className="relative w-16 max-h-18 flex-shrink-0 overflow-hidden">
+                           
+                            <img
                               src={getImageUrl(movie.poster_path, "small")}
                               alt={isTVShow(movie) ? movie.name : movie.title}
-                              fill
-                              className="object-cover rounded"
-                            /> */}
+                              className=" object-cover rounded"
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-[var(--color-text-primary)] font-medium truncate">

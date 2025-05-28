@@ -1,6 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
 import { useAuthStore } from '@/store/authStore'; // Adjust the path
-import { auth } from '@/lib/firebase';
 import toast from 'react-hot-toast';
 import {
   signInWithEmailAndPassword,
