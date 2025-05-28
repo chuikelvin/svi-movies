@@ -19,8 +19,9 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full flex items-center justify-between relative h-16 px-8">
+    <header className="w-full flex items-center justify-between h-16 px-8 fixed top-0 pt-2 z-50  backdrop-blur-md">
       {/* Logo */}
+      <div className="absolute top-0 left-0 w-full h-full bg-[var(--color-background-secondary)] opacity-40 -z-10"></div>
       <Link href="/">
         <div className="font-extrabold text-xl text-[var(--color-accent)] tracking-wide">
           SVI Movies

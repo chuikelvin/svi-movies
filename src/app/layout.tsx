@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import ThemeToggle from "@/components/ThemeToggle";
 import { Toaster } from "react-hot-toast";
+import ThemeToggle from "@/components/ThemeToggle";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SVI Movies",
-  description: "Your ultimate movie discovery platform",
+  description: "Discover and stream your favorite movies and TV shows",
 };
 
 export default function RootLayout({
@@ -30,9 +34,10 @@ export default function RootLayout({
             },
           }}
         />
-        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] flex flex-col items-center justify-start py-4 px-0 w-full">
+        <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] flex flex-col items-center justify-start px-0 w-full">
           <Header />
-          {children}
+          <main className="flex-grow pt-8">{children}</main>
+          <Footer />
         </div>
       </body>
     </html>
