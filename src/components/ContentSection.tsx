@@ -2,10 +2,12 @@
 
 import { useEffect } from "react";
 import { useMovieStore } from "@/store/movieStore";
+import type { Movie, TVShow } from "@/store/movieStore";
 import { getImageUrl } from "@/lib/tmdb";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { isTVShow } from "@/utils/isTvShow";
 
 interface ContentSectionProps {
   title: string;
@@ -116,7 +118,9 @@ export default function ContentSection({
               <div className="relative h-[400px]">
                 <Image
                   src={getImageUrl(contentItem.poster_path, "medium")}
-                  alt={contentItem.title}
+                  alt={
+                    isTVShow(contentItem) ? contentItem.name : contentItem.title
+                  }
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -124,7 +128,7 @@ export default function ContentSection({
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-semibold mb-2 line-clamp-1 text-[var(--color-text-primary)]">
-                  {contentItem.title}
+                  {isTVShow(contentItem) ? contentItem.name : contentItem.title}
                 </h3>
                 <div className="flex items-center mb-2">
                   <span className="text-[var(--color-accent)] mr-1">★</span>

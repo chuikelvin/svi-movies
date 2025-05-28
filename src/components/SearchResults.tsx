@@ -1,16 +1,22 @@
 "use client";
 
 import { useMovieStore } from "@/store/movieStore";
+import type { Movie, TVShow } from "@/store/movieStore";
 import { getImageUrl } from "@/lib/tmdb";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+
+function isTVShow(item: Movie | TVShow): item is TVShow {
+  return "name" in item;
+}
 
 export default function SearchResults() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
   const page = parseInt(searchParams.get("page") || "1");
+  const type = searchParams.get("type") || "movie";
 
   const {
     searchResults,
@@ -23,7 +29,9 @@ export default function SearchResults() {
 
   const handlePageChange = (newPage: number) => {
     if (query) {
-      router.push(`/search?q=${encodeURIComponent(query)}&page=${newPage}`);
+      router.push(
+        `/search?q=${encodeURIComponent(query)}&page=${newPage}&type=${type}`
+      );
     }
   };
 
@@ -55,7 +63,8 @@ export default function SearchResults() {
   if (searchResults.length === 0) {
     return (
       <div className="text-center text-[var(--color-text-secondary)] p-8">
-        No movies found for &ldquo;{query}&rdquo;
+        No {type === "tv" ? "TV shows" : "movies"} found for &ldquo;{query}
+        &rdquo;
       </div>
     );
   }
@@ -92,9 +101,9 @@ export default function SearchResults() {
         className="p-2 sm:p-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
       >
         <AnimatePresence mode="wait">
-          {searchResults.map((movie) => (
+          {searchResults.map((content) => (
             <motion.div
-              key={movie.id}
+              key={content.id}
               variants={item}
               whileHover={{
                 scale: 1.05,
@@ -102,12 +111,12 @@ export default function SearchResults() {
               }}
               whileTap={{ scale: 0.95 }}
               className="bg-[var(--color-background)] rounded-lg shadow-lg overflow-hidden cursor-pointer"
-              onClick={() => router.push(`/movie/${movie.id}`)}
+              onClick={() => router.push(`/${type}/${content.id}`)}
             >
               <div className="relative h-[400px]">
                 <Image
-                  src={getImageUrl(movie.poster_path, "medium")}
-                  alt={movie.title}
+                  src={getImageUrl(content.poster_path, "medium")}
+                  alt={isTVShow(content) ? content.name : content.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -115,16 +124,16 @@ export default function SearchResults() {
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-semibold mb-2 line-clamp-1 text-[var(--color-text-primary)]">
-                  {movie.title}
+                  {isTVShow(content) ? content.name : content.title}
                 </h3>
                 <div className="flex items-center mb-2">
                   <span className="text-[var(--color-accent)] mr-1">★</span>
                   <span className="text-sm text-[var(--color-text-secondary)]">
-                    {movie.vote_average.toFixed(1)}
+                    {content.vote_average.toFixed(1)}
                   </span>
                 </div>
                 <p className="text-sm text-[var(--color-text-tertiary)] line-clamp-2">
-                  {movie.overview}
+                  {content.overview}
                 </p>
               </div>
             </motion.div>

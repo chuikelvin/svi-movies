@@ -35,8 +35,28 @@ export interface MovieDetails extends Movie {
     similar: Movie[];
 }
 
+export interface TVShow {
+    id: number;
+    name: string;
+    poster_path: string;
+    overview: string;
+    vote_average: number;
+    first_air_date: string;
+    genres?: { id: number; name: string }[];
+    episode_run_time?: number[];
+    backdrop_path?: string;
+    number_of_seasons?: number;
+}
+
+export interface ContentDetails extends Movie, TVShow {
+    cast: Cast[];
+    crew: Crew[];
+    similar: (Movie | TVShow)[];
+    similar_tv?: TVShow[];
+}
+
 interface ContentState {
-    items: Movie[];
+    items: (Movie | TVShow)[];
     loading: boolean;
     error: string | null;
     currentPage: number;
@@ -47,16 +67,16 @@ export interface MovieState {
     movies: ContentState;
     series: ContentState;
     kidsContent: ContentState;
-    searchResults: Movie[];
-    selectedMovie: MovieDetails | null;
+    searchResults: (Movie | TVShow)[];
+    selectedMovie: ContentDetails | null;
     searchLoading: boolean;
     searchError: string | null;
     currentPage: number;
     totalPages: number;
     fetchMovies: (page: number, type?: "movie" | "tv" | "kids") => Promise<void>;
-    searchMovies: (query: string, page?: number) => Promise<void>;
-    liveSearch: (query: string) => Promise<void>;
-    fetchMovieDetails: (id: number) => Promise<void>;
+    searchMovies: (query: string, page?: number, type?: "movie" | "tv") => Promise<void>;
+    liveSearch: (query: string, type?: "movie" | "tv") => Promise<void>;
+    fetchMovieDetails: (id: number, type: "movie" | "tv" | "kids") => Promise<void>;
     clearSelectedMovie: () => void;
     clearSearchResults: () => void;
 }
@@ -120,29 +140,31 @@ export const useMovieStore = create<MovieState>((set) => ({
         }
     },
 
-    searchMovies: async (query: string, page = 1) => {
+    searchMovies: async (query: string, page = 1, type: "movie" | "tv" = "movie") => {
         try {
             set({ searchLoading: true, searchError: null });
-            const response = await tmdbApi.get('/search/movie', {
+            const response = await tmdbApi.get(`/search/${type}`, {
                 params: { query, page },
             });
             set({
                 searchResults: response.data.results,
                 searchLoading: false,
-                searchError: null
+                searchError: null,
+                currentPage: page,
+                totalPages: response.data.total_pages
             });
         } catch (_error) {
             set({
-                searchError: 'Failed to search movies',
+                searchError: `Failed to search ${type === 'tv' ? 'TV shows' : 'movies'}`,
                 searchLoading: false
             });
         }
     },
 
-    liveSearch: async (query: string) => {
+    liveSearch: async (query: string, type: "movie" | "tv" = "movie") => {
         try {
             set({ searchLoading: true, searchError: null });
-            const response = await tmdbApi.get('/search/movie', {
+            const response = await tmdbApi.get(`/search/${type}`, {
                 params: { query, page: 1 },
             });
             set({
@@ -152,37 +174,39 @@ export const useMovieStore = create<MovieState>((set) => ({
             });
         } catch (_error) {
             set({
-                searchError: 'Failed to search movies',
+                searchError: `Failed to search ${type === 'tv' ? 'TV shows' : 'movies'}`,
                 searchLoading: false
             });
         }
     },
 
-    fetchMovieDetails: async (id: number) => {
+    fetchMovieDetails: async (id: number, type: "movie" | "tv" | "kids" = "movie") => {
         try {
             set((state) => ({
                 movies: { ...state.movies, loading: true }
             }));
-            const [movieResponse, creditsResponse, similarResponse] = await Promise.all([
-                tmdbApi.get(`/movie/${id}`),
-                tmdbApi.get(`/movie/${id}/credits`),
-                tmdbApi.get(`/movie/${id}/similar`),
+
+            const endpoint = type === "tv" ? "tv" : "movie";
+            const [contentResponse, creditsResponse, similarResponse] = await Promise.all([
+                tmdbApi.get(`/${endpoint}/${id}`),
+                tmdbApi.get(`/${endpoint}/${id}/credits`),
+                tmdbApi.get(`/${endpoint}/${id}/similar`),
             ]);
 
-            const movieDetails: MovieDetails = {
-                ...movieResponse.data,
+            const contentDetails: ContentDetails = {
+                ...contentResponse.data,
                 cast: creditsResponse.data.cast,
                 crew: creditsResponse.data.crew,
                 similar: similarResponse.data.results,
             };
 
             set({
-                selectedMovie: movieDetails,
+                selectedMovie: contentDetails,
                 movies: { ...useMovieStore.getState().movies, loading: false }
             });
         } catch (_error) {
             set((state) => ({
-                movies: { ...state.movies, error: 'Failed to fetch movie details', loading: false }
+                movies: { ...state.movies, error: 'Failed to fetch content details', loading: false }
             }));
         }
     },

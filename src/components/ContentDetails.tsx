@@ -2,24 +2,33 @@
 
 import { useEffect } from "react";
 import { useMovieStore } from "@/store/movieStore";
+import type { ContentDetails, Movie, TVShow } from "@/store/movieStore";
 import { getImageUrl } from "@/lib/tmdb";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FiArrowLeft } from "react-icons/fi";
+import { isTVShow } from "@/utils/isTvShow";
 
-interface MovieDetailsProps {
-  movieId: number;
+type ContentType = "movie" | "tv" | "kids";
+
+interface ContentDetailsProps {
+  id: number;
+  type: ContentType;
 }
 
-export default function MovieDetails({ movieId }: MovieDetailsProps) {
+// function isTVShow(item: Movie | TVShow): item is TVShow {
+//   return "name" in item;
+// }
+
+export default function ContentDetails({ id, type }: ContentDetailsProps) {
   const router = useRouter();
   const { selectedMovie, movies, fetchMovieDetails, clearSelectedMovie } =
     useMovieStore();
 
   useEffect(() => {
-    fetchMovieDetails(movieId);
+    fetchMovieDetails(id, type);
     return () => clearSelectedMovie();
-  }, [movieId, fetchMovieDetails, clearSelectedMovie]);
+  }, [id, type, fetchMovieDetails, clearSelectedMovie]);
 
   if (movies.loading) {
     return (
@@ -32,7 +41,7 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
   if (movies.error || !selectedMovie) {
     return (
       <div className="text-center text-red-500 p-4">
-        {movies.error || "Movie not found"}
+        {movies.error || "Content not found"}
       </div>
     );
   }
@@ -44,6 +53,16 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
     (person) => person.department === "Writing"
   );
 
+  const title = type === "tv" ? selectedMovie.name : selectedMovie.title;
+  const releaseDate =
+    type === "tv" ? selectedMovie.first_air_date : selectedMovie.release_date;
+  const runtime =
+    type === "tv" ? selectedMovie.episode_run_time?.[0] : selectedMovie.runtime;
+  const similarContent =
+    type === "tv"
+      ? selectedMovie.similar_tv || selectedMovie.similar
+      : selectedMovie.similar;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <button
@@ -51,7 +70,12 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
         className="mb-6 text-[var(--color-text-primary)] hover:text-[var(--color-accent)] flex items-center gap-2 transition-colors"
       >
         <FiArrowLeft className="w-5 h-5" />
-        Back to Movies
+        Back to{" "}
+        {type === "tv"
+          ? "TV Shows"
+          : type === "kids"
+          ? "Kids Content"
+          : "Movies"}
       </button>
 
       <div className="bg-[var(--color-background-secondary)] rounded-3xl shadow-lg overflow-hidden">
@@ -62,7 +86,7 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
               "large",
               "backdrop"
             )}
-            alt={selectedMovie.title}
+            alt={title}
             fill
             className="object-cover"
             priority
@@ -70,18 +94,26 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6">
             <h1 className="text-4xl font-bold mb-2 text-[var(--color-text-primary)]">
-              {selectedMovie.title}
+              {title}
             </h1>
             <div className="flex items-center gap-4 mb-4">
               <span className="text-[var(--color-accent)]">
                 ★ {selectedMovie.vote_average.toFixed(1)}
               </span>
               <span className="text-[var(--color-text-secondary)]">
-                {selectedMovie.release_date.split("-")[0]}
+                {releaseDate.split("-")[0]}
               </span>
-              <span className="text-[var(--color-text-secondary)]">
-                {selectedMovie.runtime} min
-              </span>
+              {runtime && (
+                <span className="text-[var(--color-text-secondary)]">
+                  {runtime} min
+                </span>
+              )}
+              {type === "tv" && selectedMovie.number_of_seasons && (
+                <span className="text-[var(--color-text-secondary)]">
+                  {selectedMovie.number_of_seasons} Season
+                  {selectedMovie.number_of_seasons > 1 ? "s" : ""}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -148,27 +180,34 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
 
             <div>
               <h3 className="text-xl font-semibold mb-4 text-[var(--color-text-primary)]">
-                Similar Movies
+                Similar {type === "tv" ? "Shows" : "Movies"}
               </h3>
               <div className="space-y-4">
-                {selectedMovie.similar.slice(0, 5).map((movie) => (
+                {similarContent.slice(0, 5).map((item) => (
                   <div
-                    key={movie.id}
+                    key={item.id}
                     className="flex gap-4 cursor-pointer bg-[var(--color-background-tertiary)] p-3 rounded-lg hover:bg-[var(--color-accent)] hover:text-[var(--color-background)] transition-colors"
-                    onClick={() => router.push(`/movie/${movie.id}`)}
+                    onClick={() => router.push(`/${type}/${item.id}`)}
                   >
                     <div className="relative w-20 h-30">
                       <Image
-                        src={getImageUrl(movie.poster_path, "small")}
-                        alt={movie.title}
+                        src={getImageUrl(item.poster_path, "small")}
+                        alt={isTVShow(item) ? item.name : item.title}
                         fill
                         className="object-cover rounded"
                       />
                     </div>
                     <div>
-                      <h4 className="font-medium">{movie.title}</h4>
+                      <h4 className="font-medium">
+                        {isTVShow(item) ? item.name : item.title}
+                      </h4>
                       <p className="text-sm opacity-80">
-                        {movie.release_date.split("-")[0]}
+                        {
+                          (isTVShow(item)
+                            ? item.first_air_date
+                            : item.release_date
+                          ).split("-")[0]
+                        }
                       </p>
                     </div>
                   </div>
