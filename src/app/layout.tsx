@@ -39,7 +39,7 @@ export default function RootLayout({
         />
         <div className="flex flex-col min-h-screen relative">
           <Header />
-          <div className="absolute top-0 right-2 h-16 z-50 flex items-center justify-center md:hidden">
+          <div className="fixed top-0 right-2 h-16 z-50 flex items-center justify-center md:hidden">
             <NavigationBar />
           </div>
           <main className="flex-1 w-full pt-16">{children}</main>

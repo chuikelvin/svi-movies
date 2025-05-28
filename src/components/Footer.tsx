@@ -44,7 +44,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/movies"
+                  href="/movie"
                   className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors"
                 >
                   Movies
