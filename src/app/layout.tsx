@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import ThemeToggle from "@/components/ThemeToggle";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import NavigationBar from "@/components/NavigationBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
+      <body
+        className={`${inter.className} min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]`}
+      >
         <div className="fixed bottom-4 right-4 z-50">
           <ThemeToggle />
         </div>
@@ -34,9 +37,12 @@ export default function RootLayout({
             },
           }}
         />
-        <div className="relative min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] flex flex-col items-center justify-start px-0 w-full">
+        <div className="flex flex-col min-h-screen relative">
           <Header />
-          <main className="flex-grow pt-8">{children}</main>
+          <div className="absolute top-0 right-2 h-16 z-50 flex items-center justify-center md:hidden">
+            <NavigationBar />
+          </div>
+          <main className="flex-1 w-full pt-16">{children}</main>
           <Footer />
         </div>
       </body>
