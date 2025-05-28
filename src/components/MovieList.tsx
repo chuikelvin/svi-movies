@@ -6,6 +6,7 @@ import { getImageUrl } from "@/lib/tmdb";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { isTVShow } from "@/utils/isTvShow";
 
 export default function MovieList() {
   const { movies, fetchMovies } = useMovieStore();
@@ -95,7 +96,7 @@ export default function MovieList() {
               <div className="relative h-[400px]">
                 <Image
                   src={getImageUrl(movie.poster_path, "medium")}
-                  alt={movie.title}
+                  alt= {isTVShow(movie) ? movie.name : movie.title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -103,7 +104,7 @@ export default function MovieList() {
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-semibold mb-2 line-clamp-1 text-[var(--color-text-primary)]">
-                  {movie.title}
+                   {isTVShow(movie) ? movie.name : movie.title}
                 </h3>
                 <div className="flex items-center mb-2">
                   <span className="text-[var(--color-accent)] mr-1">★</span>

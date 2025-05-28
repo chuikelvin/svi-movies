@@ -6,5 +6,5 @@ export default async function MoviePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <ContentDetails id={parseInt(id)} type="movie" />;
+  return <ContentDetails id={parseInt(id)} type="tv" />;
 }

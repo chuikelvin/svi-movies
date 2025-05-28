@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -8,14 +8,15 @@ import SearchResults from "@/components/SearchResults";
 export default function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q");
+  const type = searchParams.get("type") || "movie";
   const { searchMovies } = useMovieStore();
 
   useEffect(() => {
     if (query) {
       const page = parseInt(searchParams.get("page") || "1");
-      searchMovies(query, page);
+      searchMovies(query, page, type as "movie" | "tv");
     }
-  }, [query, searchMovies, searchParams]);
+  }, [query, searchMovies, searchParams, type]);
 
   return (
     <div className="container mx-auto px-4">
