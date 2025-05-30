@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMovieStore } from "@/store/movieStore";
 import type { Movie, TVShow } from "@/store/movieStore";
 import { getImageUrl } from "@/lib/tmdb";
@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { isTVShow } from "@/utils/isTvShow";
+import Spinner from "@/components/Spinner";
 
 interface ContentSectionProps {
   title: string;
@@ -25,6 +26,15 @@ export default function ContentSection({
   const { movies, series, kidsContent, fetchMovies } = useMovieStore();
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const triggerLoader = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 20000); // 20 seconds timeout
+  };
+
   const contentState =
     type === "movie" ? movies : type === "tv" ? series : kidsContent;
 
@@ -33,16 +43,7 @@ export default function ContentSection({
   }, [type, fetchMovies]);
 
   if (contentState.loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <motion.div
-          role="status"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-white rounded-full"
-        />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (contentState.error) {
@@ -76,6 +77,7 @@ export default function ContentSection({
 
   return (
     <section className="container mx-auto px-4 py-8">
+      {isLoading && <Spinner fullscreen={true} />}
       <div className="flex justify-between items-center mb-6">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
@@ -88,7 +90,10 @@ export default function ContentSection({
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => router.push(`/${type}`)}
+            onClick={() => {
+              triggerLoader();
+              router.push(`/${type}`);
+            }}
             className="text-[var(--color-accent)] hover:underline"
           >
             View All
@@ -113,7 +118,10 @@ export default function ContentSection({
               }}
               whileTap={{ scale: 0.95 }}
               className="bg-[var(--color-background)] rounded-lg shadow-lg overflow-hidden cursor-pointer"
-              onClick={() => router.push(`/${type}/${contentItem.id}`)}
+              onClick={() => {
+                triggerLoader();
+                router.push(`/${type}/${contentItem.id}`);
+              }}
             >
               <div className="relative h-[400px]">
                 <Image
