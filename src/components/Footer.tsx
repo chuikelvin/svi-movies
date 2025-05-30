@@ -2,7 +2,12 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { FiGithub, FiTwitter, FiInstagram, FiLinkedin, FiX, FiGlobe } from "react-icons/fi";
+import {
+  FiGithub,
+  FiInstagram,
+  FiLinkedin,
+  FiGlobe,
+} from "react-icons/fi";
 import { SiX } from "react-icons/si";
 
 export default function Footer() {
