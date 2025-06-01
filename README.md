@@ -11,6 +11,7 @@ A modern, responsive web application for browsing movies and TV shows, built wit
 - 🎭 Detailed movie and TV show information
 - 🎯 User authentication and personalized experience
 - 🎨 Smooth animations with Framer Motion
+- 🐳 Docker support for easy deployment
 
 ## Tech Stack
 
@@ -22,6 +23,7 @@ A modern, responsive web application for browsing movies and TV shows, built wit
 - **API:** TMDB (The Movie Database)
 - **Authentication:** Custom auth implementation
 - **Icons:** React Icons
+- **Containerization:** Docker
 
 ## Project Structure
 
@@ -52,8 +54,11 @@ src/
 
 - Node.js 18+ and npm
 - TMDB API key (get it from [TMDB](https://www.themoviedb.org/settings/api))
+- Docker and Docker Compose (for containerized deployment)
 
 ### Setup
+
+#### Local Development
 
 1. Clone the repository:
 
@@ -74,38 +79,94 @@ src/
    # Copy the example environment file
    cp env.example .env.local
 
-   # Edit .env.local with your values   
+   # Edit .env.local with your values
    ```
-
-# Admin Credentials
-
-NEXT_PUBLIC_ADMIN_EMAIL=admin@svi.com
-NEXT_PUBLIC_ADMIN_PASSWORD=svi2025rocks!
-
-````
 
 4. Run the development server:
 
-```bash
-npm run dev
-````
+   ```bash
+   npm run dev
+   ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+#### Docker Deployment
+
+1. Build and run using Docker Compose:
+
+   ```bash
+   # Build and start the containers
+   docker compose up -d
+
+   # View logs
+   docker compose logs -f
+
+   # Stop the containers
+   docker compose down
+   ```
+
+2. Environment Variables for Docker:
+   Create a `.env` file in the project root with the following variables:
+
+   ```env
+   # Public Firebase config (available in browser)
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+
+   # Server-side environment variables
+   TMDB_BEARER_TOKEN=your_tmdb_bearer_token
+   ```
+
+3. Docker Commands:
+
+   ```bash
+   # Build the image
+   docker compose build
+
+   # Start the application
+   docker compose up -d
+
+   # View logs
+   docker compose logs -f
+
+   # Stop the application
+   docker compose down
+
+   # Rebuild and restart
+   docker compose up -d --build
+   ```
+
+4. Access the application:
+   - The application will be available at `http://localhost:3000`
+   - Health check endpoint: `http://localhost:3000/api/health`
 
 ### Environment Variables
 
 The application requires the following environment variables:
 
-- `NEXT_PUBLIC_TMDB_BEARER_TOKEN`: Your TMDB API bearer token
+- `TMDB_BEARER_TOKEN`: Your TMDB API bearer token
   - Get it from [TMDB API Settings](https://www.themoviedb.org/settings/api)
   - Required for fetching movie and TV show data
 
-Optional variables (if using authentication):
+Firebase Configuration (Required):
+- `NEXT_PUBLIC_FIREBASE_API_KEY`: Your Firebase API key
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`: Your Firebase auth domain
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`: Your Firebase project ID
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`: Your Firebase storage bucket
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`: Your Firebase messaging sender ID
+- `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID
 
-- `NEXT_PUBLIC_AUTH_SECRET`: Secret key for authentication
-- `NEXT_PUBLIC_AUTH_URL`: Authentication service URL
+Admin Credentials:
+- `NEXT_PUBLIC_ADMIN_EMAIL`: Admin email for authentication
+- `NEXT_PUBLIC_ADMIN_PASSWORD`: Admin password for authentication
 
 ### Building for Production
+
+#### Local Build
 
 ```bash
 # Build the application
@@ -115,13 +176,20 @@ npm run build
 npm start
 ```
 
+#### Docker Production Build
+
+```bash
+# Build and start production containers
+docker compose -f docker-compose.yml up -d --build
+```
+
 ## API Integration
 
 The application uses The Movie Database (TMDB) API for movie and TV show data. You'll need to:
 
 1. Create an account at [TMDB](https://www.themoviedb.org/)
 2. Generate an API key
-3. Add the API key to your `.env.local` file
+3. Add the API key to your `.env.local` file or Docker environment variables
 
 ## Contributing
 
@@ -141,3 +209,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Next.js](https://nextjs.org/) for the amazing framework
 - [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
 - [Framer Motion](https://www.framer.com/motion/) for the smooth animations
+- [Docker](https://www.docker.com/) for containerization support
