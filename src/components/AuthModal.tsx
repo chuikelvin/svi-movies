@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { motion, AnimatePresence } from "framer-motion";
 import Input from "./ui/Input";
 import { FcGoogle } from "react-icons/fc";
+import { LuCopy } from "react-icons/lu";
 
 export default function AuthModal({
   open,
@@ -157,34 +158,25 @@ export default function AuthModal({
             <div className="font-extrabold text-xl text-[var(--color-accent)] tracking-wide mb-8 w-full text-center">
               SVI Movies
             </div>
-            {/* Dummy Credentials Info */}
-            <div className="mb- p-4 bg-[var(--color-background-secondary)] rounded-lg text-sm">
+            {/* Demo Credentials Info */}
+            <div>
               <p className="text-[var(--color-text-secondary)] mb-2 flex w-full items-center gap-2">
                 <span>Use Demo Credentials:</span>
-                <button 
+                <button
                   onClick={() => {
-                    setEmail("admin@svi.com");
-                    setPassword("svi2025rocks!");
+                    setEmail(
+                      process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@svi.com"
+                    );
+                    setPassword(
+                      process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "svi2025rocks!"
+                    );
                   }}
                   className="text-[var(--color-accent)] hover:opacity-80 transition-opacity"
                   aria-label="Fill demo credentials"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                  </svg>
+                  <LuCopy />                
                 </button>
               </p>
-              {/* <div className="space-y-1">
-                <p className="text-[var(--color-text-tertiary)]">
-                  <span className="text-[var(--color-accent)]">Email:</span>{" "}
-                  admin@svi.com
-                </p>
-                <p className="text-[var(--color-text-tertiary)]">
-                  <span className="text-[var(--color-accent)]">Password:</span>{" "}
-                  svi2025rocks!
-                </p>
-              </div> */}
             </div>
             {/* Close Button */}
             <button
