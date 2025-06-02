@@ -60,8 +60,8 @@ export default function ContentDetails({ id, type }: ContentDetailsProps) {
     type === "tv" ? selectedMovie.episode_run_time?.[0] : selectedMovie.runtime;
   const similarContent =
     type === "tv"
-      ? selectedMovie.similar_tv || selectedMovie.similar
-      : selectedMovie.similar;
+      ? selectedMovie.similar_tv || selectedMovie.similar || []
+      : selectedMovie.similar || [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -100,9 +100,11 @@ export default function ContentDetails({ id, type }: ContentDetailsProps) {
               <span className="text-[var(--color-accent)]">
                 ★ {selectedMovie.vote_average.toFixed(1)}
               </span>
-              <span className="text-[var(--color-text-secondary)]">
-                {releaseDate.split("-")[0]}
-              </span>
+              {releaseDate && (
+                <span className="text-[var(--color-text-secondary)]">
+                  {releaseDate.split("-")[0]}
+                </span>
+              )}
               {runtime && (
                 <span className="text-[var(--color-text-secondary)]">
                   {runtime} min

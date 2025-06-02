@@ -242,7 +242,6 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
                           onClick={() => handleMovieClick(movie.id)}
                         >
                           <div className="relative w-16 max-h-18 flex-shrink-0 overflow-hidden">
-                           
                             <img
                               src={getImageUrl(movie.poster_path, "small")}
                               alt={isTVShow(movie) ? movie.name : movie.title}
@@ -254,9 +253,10 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
                               {isTVShow(movie) ? movie.name : movie.title}
                             </h3>
                             <p className="text-sm text-[var(--color-text-secondary)] truncate">
-                              {isTVShow(movie)
-                                ? movie.first_air_date?.split("-")[0]
-                                : movie.release_date?.split("-")[0]}
+                              {(isTVShow(movie)
+                                ? movie.first_air_date
+                                : movie.release_date
+                              )?.split("-")[0] || "N/A"}
                             </p>
                           </div>
                         </motion.div>
