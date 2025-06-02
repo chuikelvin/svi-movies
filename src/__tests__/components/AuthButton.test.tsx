@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import AuthButton from "../../components/AuthButton";
+import AuthButton from "@/components/AuthButton";
 import { useAuthStore } from "@/store/authStore";
 
 // Mock auth store
@@ -8,7 +8,7 @@ jest.mock("@/store/authStore", () => ({
 }));
 
 // Mock AuthModal to avoid rendering the actual modal
-jest.mock("../../components/AuthModal", () => {
+jest.mock("@/components/AuthModal", () => {
   const MockAuthModal = ({
     open,
     onClose,

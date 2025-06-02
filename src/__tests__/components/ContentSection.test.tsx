@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { render, screen, fireEvent } from "@testing-library/react";
-import ContentSection from "../../components/ContentSection"; // adjust to actual path
+import ContentSection from "@/components/ContentSection"; // adjust to actual path
 import { useMovieStore } from "@/store/movieStore";
 import { useRouter } from "next/navigation";
 import React from "react";

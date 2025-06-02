@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import ThemeToggle from "../../components/ThemeToggle"; // adjust path as needed
+import ThemeToggle from "@/components/ThemeToggle"; // adjust path as needed
 import React from "react";
 
 // Types for Framer Motion mock
