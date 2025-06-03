@@ -27,5 +27,13 @@ jobs:
       - name: Run linting
         run: npm run lint
 
-      - name: Run tests
-        run: npm test
+      - name: Install coveralls CLI
+        run: npm install -g coveralls
+
+      - name: Run Tests with Coverage
+        run: npx jest --coverage
+      
+      - name: Upload to Coveralls
+        run: cat ./coverage/lcov.info | coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
