@@ -43,7 +43,7 @@ describe("MovieSearch", () => {
     const input = screen.getByPlaceholderText("Search for movies...");
     fireEvent.change(input, { target: { value: "inception" } });
 
-    await waitFor(() => expect(liveSearch).toHaveBeenCalledWith("inception"));
+    await waitFor(() => expect(liveSearch).toHaveBeenCalledWith("inception", "movie"));
   });
 
   it("displays search results and handles movie click", async () => {
@@ -69,7 +69,7 @@ describe("MovieSearch", () => {
     const form = screen.getByTestId("search-form");
     fireEvent.submit(form);
 
-    expect(mockPush).toHaveBeenCalledWith("/search?q=avatar");
+    expect(mockPush).toHaveBeenCalledWith("/search?q=avatar&type=movie");
   });
 
   it("shows loading spinner when searchLoading is true", async () => {

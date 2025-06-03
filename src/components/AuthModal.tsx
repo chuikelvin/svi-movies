@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { motion, AnimatePresence } from "framer-motion";
 import Input from "./ui/Input";
 import { FcGoogle } from "react-icons/fc";
+import { LuCopy } from "react-icons/lu";
 
 export default function AuthModal({
   open,
@@ -157,21 +158,25 @@ export default function AuthModal({
             <div className="font-extrabold text-xl text-[var(--color-accent)] tracking-wide mb-8 w-full text-center">
               SVI Movies
             </div>
-            {/* Dummy Credentials Info */}
-            <div className="mb-6 p-4 bg-[var(--color-background-secondary)] rounded-lg text-sm">
-              <p className="text-[var(--color-text-secondary)] mb-2">
-                Demo Credentials:
+            {/* Demo Credentials Info */}
+            <div>
+              <p className="text-[var(--color-text-secondary)] mb-2 flex w-full items-center gap-2">
+                <span>Use Demo Credentials:</span>
+                <button
+                  onClick={() => {
+                    setEmail(
+                      process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@svi.com"
+                    );
+                    setPassword(
+                      process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "svi2025rocks!"
+                    );
+                  }}
+                  className="text-[var(--color-accent)] hover:opacity-80 transition-opacity"
+                  aria-label="Fill demo credentials"
+                >
+                  <LuCopy />                
+                </button>
               </p>
-              <div className="space-y-1">
-                <p className="text-[var(--color-text-tertiary)]">
-                  <span className="text-[var(--color-accent)]">Email:</span>{" "}
-                  admin@svi.com
-                </p>
-                <p className="text-[var(--color-text-tertiary)]">
-                  <span className="text-[var(--color-accent)]">Password:</span>{" "}
-                  svi2025rocks!
-                </p>
-              </div>
             </div>
             {/* Close Button */}
             <button

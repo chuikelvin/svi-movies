@@ -53,7 +53,7 @@ export default function AuthButton({
     return (
       <div className="relative">
         <motion.button
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-background-tertiary)] transition"
+          className="flex h-12  items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-background-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-background-tertiary)] transition"
           onClick={() => setUserMenuOpen(!userMenuOpen)}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

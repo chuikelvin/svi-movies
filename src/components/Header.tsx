@@ -19,7 +19,7 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full flex items-center justify-between h-16 px-8 fixed top-0 pt-2 z-50 overflow-visible">
+    <header className="w-full flex items-center justify-between h-16 px-8 fixed top-0 py-2 z-50 overflow-visible">
       {/* Logo */}
       <div className="absolute top-0 left-0 w-full h-16 bg-[var(--color-background-secondary)]  opacity-60 -z-10"></div>
       <Link href="/">
