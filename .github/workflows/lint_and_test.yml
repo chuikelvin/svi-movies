@@ -4,9 +4,10 @@ on:
   pull_request:
     branches: 
       - development
+      - production
 
 jobs:
-  deploy:
+   lint-and-test:
     runs-on: ubuntu-latest
 
     steps:
