@@ -16,6 +16,11 @@ A modern, responsive web application for browsing movies and TV shows, built wit
 - 🎨 Smooth animations with Framer Motion
 - 🐳 Docker support for easy deployment
 
+## Wireframe
+
+Check out the low-fidelity wireframe design for this project:
+[View Wireframe](https://www.figma.com/design/Eup3HXjBlCt6FMuFAETRHk/SVI-Movies-low-fi-design?node-id=0-1&m=dev&t=mgX3a1sBUIuY3z2B-1)
+
 ## Tech Stack
 
 - **Framework:** Next.js 13+ (App Router)
@@ -156,6 +161,7 @@ The application requires the following environment variables:
   - Required for fetching movie and TV show data
 
 Firebase Configuration (Required):
+
 - `NEXT_PUBLIC_FIREBASE_API_KEY`: Your Firebase API key
 - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`: Your Firebase auth domain
 - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`: Your Firebase project ID
@@ -164,6 +170,7 @@ Firebase Configuration (Required):
 - `NEXT_PUBLIC_FIREBASE_APP_ID`: Your Firebase app ID
 
 Admin Credentials:
+
 - `NEXT_PUBLIC_ADMIN_EMAIL`: Admin email for authentication
 - `NEXT_PUBLIC_ADMIN_PASSWORD`: Admin password for authentication
 
