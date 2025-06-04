@@ -1,7 +1,5 @@
 # SVI Movies - Modern Movie & TV Show Streaming Platform
 
-# ArbitrageClient
-
 ![Linting and Tests](https://github.com/chuikelvin/svi-movies/actions/workflows/lint_and_test.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/chuikelvin/svi-movies/badge.svg?branch=development)](https://coveralls.io/github/chuikelvin/svi-movies?branch=development)
 
