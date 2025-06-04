@@ -41,19 +41,30 @@ src/
 │   ├── movie/             # Movie listing and details
 │   ├── tv/                # TV series listing and details
 │   ├── kids/              # Family-friendly content
-│   └── page.tsx           # Home page
+│   ├── search/            # Search results page
+│   ├── layout.tsx         # Root layout component
+│   ├── page.tsx           # Home page
+│   ├── not-found.tsx      # 404 error page
+│   └── globals.css        # Global styles
 ├── components/            # Reusable components
 │   ├── ui/               # UI components
 │   ├── AuthButton.tsx    # Authentication button
+│   ├── AuthModal.tsx     # Authentication modal
 │   ├── ContentSection.tsx # Content grid section
-│   ├── MovieDetails.tsx  # Movie details view
-│   └── MovieSearch.tsx   # Search functionality
-├── lib/                  # Utility functions
-│   └── tmdb.ts          # TMDB API integration
+│   ├── ContentDetails.tsx # Content details view
+│   ├── Footer.tsx        # Footer component
+│   ├── Header.tsx        # Header component
+│   ├── Hero.tsx          # Hero section
+│   ├── MovieList.tsx     # Movie list component
+│   ├── MovieSearch.tsx   # Search functionality
+│   ├── NavigationBar.tsx # Navigation component
+│   ├── SearchResults.tsx # Search results display
+│   ├── Spinner.tsx       # Loading spinner
+│   └── ThemeToggle.tsx   # Theme switcher
+├── lib/                  # Utility functions and configurations
 ├── store/               # State management
-│   ├── authStore.ts    # Authentication state
-│   └── movieStore.ts   # Movie data state
-└── styles/             # Global styles
+├── utils/              # Helper functions
+└── __tests__/         # Test files
 ```
 
 ## Getting Started
