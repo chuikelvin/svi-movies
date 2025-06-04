@@ -1,7 +1,7 @@
 # SVI Movies - Modern Movie & TV Show Streaming Platform
 
 ![Linting and Tests](https://github.com/chuikelvin/svi-movies/actions/workflows/lint_and_test.yml/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/chuikelvin/svi-movies/badge.svg?branch=add-coverage-reporting)](https://coveralls.io/github/chuikelvin/svi-movies?branch=add-coverage-reporting)
+[![Coverage Status](https://coveralls.io/repos/github/chuikelvin/svi-movies/badge.svg?branch=development)](https://coveralls.io/github/chuikelvin/svi-movies?branch=development)
 
 A modern, responsive web application for browsing movies and TV shows, built with Next.js 13+, TypeScript, and Tailwind CSS.
 
