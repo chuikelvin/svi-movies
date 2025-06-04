@@ -4,9 +4,10 @@ on:
   pull_request:
     branches: 
       - development
+      - production
 
 jobs:
-  deploy:
+   lint-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,5 +28,17 @@ jobs:
       - name: Run linting
         run: npm run lint
 
-      - name: Run tests
-        run: npm test
+      - name: Install coveralls CLI
+        run: npm install -g coveralls
+
+      - name: Run Tests with Coverage
+        run: npx jest --coverage
+
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage/lcov.info
+          flag-name: unit-tests
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
