@@ -32,8 +32,12 @@ jobs:
 
       - name: Run Tests with Coverage
         run: npx jest --coverage
-      
+
       - name: Upload to Coveralls
-        run: cat ./coverage/lcov.info | coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage/lcov.info
+          flag-name: unit-tests
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
