@@ -10,6 +10,7 @@ import {
     User,
     setPersistence,
     browserLocalPersistence,
+    browserSessionPersistence,
 } from 'firebase/auth';
 import toast from 'react-hot-toast';
 
@@ -28,11 +29,11 @@ interface AuthState {
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@svi.com';
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'svi2025rocks!';
 const ADMIN_MESSAGE =
-    '👋 Hello, Assessor! This is a special login for system assessment. The developer has implemented a secure and modern authentication system using Firebase and Zustand.';
+    '👋 Hello, Assessor! This is a special login for system assessment';
 const DUMMY_USER = { email: ADMIN_EMAIL };
 
 // Set up persistence
-setPersistence(auth, browserLocalPersistence).catch((error) => {
+setPersistence(auth, browserSessionPersistence).catch((error) => {
     console.error('Error setting auth persistence:', error);
 });
 

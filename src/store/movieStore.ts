@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { create } from 'zustand';
 import { tmdbApi, fetchPopularMovies, fetchPopularSeries as fetchPopularSeries, fetchKidsContent } from '@/lib/tmdb';

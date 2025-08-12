@@ -21,6 +21,8 @@ function isTVShow(item: Movie | TVShow): item is TVShow {
   return "name" in item;
 }
 
+type ContentType = "movie" | "tv";
+
 export default function MovieSearch({ onSearch }: MovieSearchProps) {
   const [query, setQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -32,6 +34,15 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const { searchResults, searchLoading, liveSearch, clearSearchResults } =
     useMovieStore();
+
+  const buttons: {
+    type: ContentType;
+    labelFull: string;
+    labelShort: string;
+  }[] = [
+    { type: "movie", labelFull: "Movies", labelShort: "M" },
+    { type: "tv", labelFull: "TV Shows", labelShort: "S" },
+  ];
 
   // Load search history from localStorage
   useEffect(() => {
@@ -149,7 +160,7 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
         className="w-full max-w-2xl mx-auto"
         data-testid="search-form"
       >
-        <div className="flex-1 flex-wrap flex justify-center gap-2 bg-[var(--color-background-secondary)] rounded-full pl-4 pr-2 py-2 h-12">
+        <div className="flex-1 flex-wrap md:flex-nowrap flex justify-center gap-2 bg-[var(--color-background-secondary)] rounded-full pl-4 pr-2 py-2 h-12">
           <motion.input
             ref={inputRef}
             whileFocus={{ scale: 1.02 }}
@@ -171,7 +182,26 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
               <FiX className="w-5 h-5" />
             </button>
           )}
+
           <div className="flex items-center gap-1">
+            {buttons.map(({ type, labelFull, labelShort }) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => setContentType(type)}
+                className={`px-2 py-1 rounded-md text-sm transition-colors ${
+                  contentType === type
+                    ? "bg-[var(--color-accent)] text-[var(--color-background)]"
+                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                }`}
+              >
+                {/* Show full label on small screens, abbreviated on md and up */}
+                <span className="inline md:hidden">{labelFull}</span>
+                <span className="hidden md:inline">{labelShort}</span>
+              </button>
+            ))}
+          </div>
+          {/* <div className="hidden lg:flex items-center gap-1">
             <button
               type="button"
               onClick={() => setContentType("movie")}
@@ -194,7 +224,7 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
             >
               TV Shows
             </button>
-          </div>
+          </div> */}
           <button
             className="rounded-full bg-[var(--color-accent)] flex items-center justify-center hover:opacity-90 transition-colors p-2"
             aria-label="Search"
