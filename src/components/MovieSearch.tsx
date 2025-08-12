@@ -196,8 +196,8 @@ export default function MovieSearch({ onSearch }: MovieSearchProps) {
                 }`}
               >
                 {/* Show full label on small screens, abbreviated on md and up */}
-                <span className="inline md:hidden">{labelFull}</span>
-                <span className="hidden md:inline">{labelShort}</span>
+                <span className="inline md:hidden lg:inline">{labelFull}</span>
+                <span className="hidden md:inline lg:hidden">{labelShort}</span>
               </button>
             ))}
           </div>
